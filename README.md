@@ -1,6 +1,8 @@
 # IaC
 
-此專案是用 IaC (Terraform + Terragrunt) 來管理 GCP 相關資源以及服務，並透過 Gitlab CI/CD 來進行自動化部署。
+此專案是用 IaC (Terraform + Terragrunt) 來管理 GCP 相關資源以及服務，並透過 GitLab CI/CD 來進行自動化部署。
+
+<br>
 
 ## 前情提要
 
@@ -15,7 +17,7 @@
 
 - Terraform : v1.5.7
 - Terragrunt : 0.53.4
-- Gitlab : 16.3
+- GitLab : 16.3
 
 <br>
 
