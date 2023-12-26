@@ -24,7 +24,7 @@
 ## 文件目錄
 
 - [IaC 介紹](https://github.com/880831ian/IaC/blob/master/docs/iac-introduce.md)
-- [IaC 架構](https://github.com/880831ian/IaC/blob/master/docs/iac-introduce.md)
+- [IaC 架構](https://github.com/880831ian/IaC/blob/master/docs/iac-framework.md)
 - [IaC CICD 架構](https://github.com/880831ian/IaC/blob/master/docs/iac-cicd-framework.md)
 - [IaC 匯入、轉換腳本介紹](https://github.com/880831ian/IaC/blob/master/docs/iac-import-conversion-scripts.md)
 - [IaC 備注](https://github.com/880831ian/IaC/blob/master/docs/iac-remark.md)
