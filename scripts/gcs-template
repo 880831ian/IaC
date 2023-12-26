@@ -1,0 +1,23 @@
+terraform {
+  source = "${get_path_to_repo_root()}/modules/gcs"
+}
+
+include {
+  path = find_in_parent_folders()
+}
+
+inputs = {
+  name = "${name}"
+  labels = ${labels}
+  location = "${location}"
+  custom_placement_config = ${custom_placement_config}
+  autoclass = ${autoclass}
+  storage_class = "${storage_class}"
+  public_access_prevention = "${public_access_prevention}"
+  uniform_bucket_level_access = ${uniform_bucket_level_access}
+  force_destroy = ${force_destroy}
+  versioning = ${versioning}
+  retention_policy = ${retention_policy}
+  cors = ${cors}
+  lifecycle_rule = ${lifecycle_rule}
+}

@@ -1,0 +1,37 @@
+terraform {
+  source = "${get_path_to_repo_root()}/modules/gce"
+}
+
+include {
+  path = find_in_parent_folders()
+}
+
+inputs = {
+  name = "${name}"
+  zone = "${zone}"
+  machine_type  = "${machine_type}"
+  enable_display = ${enable_display}
+  boot_disk_auto_delete = ${boot_disk_auto_delete}
+  boot_disk_device_name = "${boot_disk_device_name}"
+  boot_disk_image = "${boot_disk_image}"
+  boot_disk_size = ${boot_disk_size}
+  boot_disk_type = "${boot_disk_type}"
+  boot_disk_mode = "${boot_disk_mode}"
+  network_project_id  = "${network_project_id}"
+  network  = "${network}"
+  subnetwork = "${subnetwork}"
+  nat_ip_enabled = ${nat_ip_enabled}
+  attached_disk_enabled = ${attached_disk_enabled}
+  attached_disk_device_name = "${attached_disk_device_name}"
+  attached_disk_mode = "${attached_disk_mode}"
+  attached_disk_source = "${attached_disk_source}"
+  labels = ${labels}    
+  network_tags = ${network_tags}  
+  metadata = ${metadata}
+  resource_policies = ${resource_policies}
+  service_account_enabled = ${service_account_enabled}
+  service_account_email = "${service_account_email}"
+  service_account_scopes = ${service_account_scopes}
+  deletion_protection = ${deletion_protection}
+  allow_stopping_for_update = ${allow_stopping_for_update}  
+}

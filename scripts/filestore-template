@@ -1,0 +1,18 @@
+terraform {
+  source = "${get_path_to_repo_root()}/modules/filestore"
+}
+
+include {
+  path = find_in_parent_folders()
+}
+
+inputs = {
+  name = "${name}"
+  location = "${location}"
+  description = "${description}"
+  tier = "${tier}"
+  file_shares_name = "${file_shares_name}"
+  file_shares_capacity_tib = ${file_shares_capacity_tib}
+  network  = "${network}"
+  labels = ${labels}
+}
