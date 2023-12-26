@@ -1,0 +1,1 @@
+# 可以參考 template/[資源]/terragrunt.hcl，是用來設定 Terragrunt 資源的設定檔
