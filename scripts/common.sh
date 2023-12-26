@@ -1,7 +1,7 @@
 #! /bin/bash
 
 PROJECT_ARRAY=(
-    "專案名稱")
+    "[專案名稱]")
 
 # 顏色設定
 RED="\033[1;31m"
@@ -13,11 +13,11 @@ WHITE="\033[0m"
 PS3='👆 請選擇要轉換的專案名稱(輸入開頭數字)：'
 select PROJECT in "${PROJECT_ARRAY[@]}"; do
     case ${PROJECT} in
-    "專案名稱")
+    "[專案名稱]")
         echo -e "\n${BLUE}選擇專案：${YELLOW}${PROJECT}${WHITE}\n"
-        project_name="專案名稱"
-        project_id="專案ID"
-        region="asia-east1"
+        project_name="[專案名稱]"
+        project_id="[專案ID]"
+        region="[專案地區]"
         break
         ;;
     *)
