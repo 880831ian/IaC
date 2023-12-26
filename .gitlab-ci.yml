@@ -1,0 +1,89 @@
+stages:
+  - diff
+  - check
+  - plan+apply
+
+variables:
+  PARENT_PIPELINE_ID: ${CI_PIPELINE_ID} # 將父流程的 CI_PIPELINE_ID 傳給子流程
+  PROJECT:
+    value: "請選擇以下專案"
+    options:
+      - "請選擇以下專案"
+      - "專案名稱"
+    description: "請選擇要執行的專案名稱，此欄位為必填，沒有填寫會無法執行"
+  IAC_TYPE:
+    value: "請選擇以下 IaC 類型"
+    options:
+      - "請選擇以下 IaC 類型"
+      - "gke"
+      - "gce"
+      - "gcs"
+      - "filestore"
+      - "memorystore"
+    description: "請選擇要執行的 IaC 類型，此欄位為必填，沒有填寫會無法執行"
+
+diff:
+  stage: diff
+  tags:
+    - standard
+  script:
+    - LAST_COMMIT_SHA=$(git rev-parse HEAD~1)
+    - CHANGED_FILES=$(git diff --name-only ${LAST_COMMIT_SHA} ${CI_COMMIT_SHA} -- ${CI_PROJECT_DIR}/projects/)
+    - echo "$CHANGED_FILES"
+    - PROJECT_URL=$(echo "$CHANGED_FILES" | awk -F'/' '/projects\/[^\/]+\/.*\/terragrunt\.hcl/{print $2"/"$3}' | sort | uniq)
+    - PROJECT_URL=$(echo $PROJECT_URL | sed 's/ /,/g')
+    - apk add --no-cache bash 1>/dev/null
+    - ./generate_job.sh ${PROJECT_URL} diff
+    - echo ${PROJECT_URL}
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main" && $CI_PIPELINE_SOURCE != "web"
+      changes:
+        - projects/**/**/terragrunt.hcl
+  artifacts:
+    paths:
+      - job.yml
+    expire_in: "3600"
+
+plan & Apply:
+  stage: plan+apply
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main" && $CI_PIPELINE_SOURCE != "web"
+      changes:
+        - projects/**/**/terragrunt.hcl
+  trigger:
+    include:
+      - artifact: job.yml
+        job: diff
+    strategy: depend
+
+check:
+  stage: check
+  tags:
+    - standard
+  script:
+    - echo "執行專案名稱：${PROJECT} / IaC 類型：${IAC_TYPE}"
+    - PROJECT_URL=$(ls -d projects/${PROJECT}/${IAC_TYPE}-*)
+    - PROJECT_URL=$(echo $PROJECT_URL | sed 's/projects\///g' | sed 's/ /,/g')
+    - apk add --no-cache bash 1>/dev/null
+    - ./generate_job.sh ${PROJECT_URL} check
+    - echo ${PROJECT_URL}
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "web" && $PROJECT != "請選擇以下專案" && $IAC_TYPE != "請選擇以下 IaC 類型"
+      when: on_success
+      allow_failure: false
+  artifacts:
+    paths:
+      - job.yml
+    expire_in: "3600"
+
+check plan & Apply:
+  stage: plan+apply
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "web" && $PROJECT != "請選擇以下專案" && $IAC_TYPE != "請選擇以下 IaC 類型"
+      when: on_success
+      allow_failure: false
+  trigger:
+    include:
+      - artifact: job.yml
+        job: check
+    strategy: depend
