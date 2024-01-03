@@ -33,10 +33,12 @@ resource "google_compute_instance" "instance" {
   network_interface {
     network    = "projects/${local.network_project_id}/global/networks/${var.network}"
     subnetwork = "projects/${local.network_project_id}/regions/${local.region}/subnetworks/${var.subnetwork}"
+    network_ip = google_compute_address.internal-address.address
 
     dynamic "access_config" {
       for_each = var.nat_ip_enabled ? [1] : []
       content {
+        nat_ip = google_compute_address.external-address[0].address
       }
     }
   }
@@ -58,6 +60,36 @@ resource "google_compute_instance" "instance" {
   lifecycle {
     ignore_changes = [metadata["ssh-keys"]]
   }
+
+  timeouts {}
+}
+
+// https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_address
+resource "google_compute_address" "internal-address" { // 內網IP
+  provider = google
+
+  project      = var.project_id
+  name         = var.internal_ip_address_name != "" ? var.internal_ip_address_name : "${var.name}-internal"
+  description  = var.internal_ip_address_description
+  region       = local.region
+  address_type = "INTERNAL"
+  address      = var.internal_ip_address
+  subnetwork   = "projects/${local.network_project_id}/regions/${local.region}/subnetworks/${var.subnetwork}"
+
+  timeouts {}
+}
+
+resource "google_compute_address" "external-address" { // 外網IP
+  count    = var.nat_ip_enabled ? 1 : 0
+  provider = google
+
+  project      = var.project_id
+  name         = var.external_ip_address_name != "" ? var.external_ip_address_name : "${var.name}-external"
+  description  = var.external_ip_address_description
+  region       = local.region
+  address_type = "EXTERNAL"
+  address      = var.external_ip_address
+  network_tier = coalesce(var.external_network_tier, "PREMIUM")
 
   timeouts {}
 }

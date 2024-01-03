@@ -114,7 +114,7 @@ variable "subnetwork" {
 
 variable "nat_ip_enabled" {
   type        = bool
-  description = "是否啟用 NAT IP，預設為關閉 (選填)"
+  description = "是否啟用外網 IP，預設為關閉 (選填)"
   default     = false
 }
 
@@ -177,4 +177,51 @@ variable "allow_stopping_for_update" {
   type        = bool
   description = "是否允許自動停止後更新，預設為關閉 (選填)"
   default     = false
+}
+
+# ====================
+variable "internal_ip_address_name" {
+  type        = string
+  description = "IP 內網名稱"
+  default     = ""
+}
+
+variable "internal_ip_address_description" {
+  type        = string
+  description = "IP 內網描述"
+  default     = ""
+}
+
+variable "internal_ip_address" {
+  type        = string
+  description = "IP 內網位址"
+  default     = ""
+}
+
+variable "external_ip_address_name" {
+  type        = string
+  description = "IP 外網名稱"
+  default     = ""
+}
+
+variable "external_ip_address_description" {
+  type        = string
+  description = "IP 外網描述"
+  default     = ""
+}
+
+variable "external_ip_address" {
+  type        = string
+  description = "IP 外網位址"
+  default     = ""
+}
+
+variable "external_network_tier" {
+  type        = string
+  description = "IP 外網網路層級"
+  default     = "PREMIUM"
+  validation {
+    condition     = contains(["PREMIUM", "STANDARD"], var.external_network_tier)
+    error_message = "不符合 IP 外網網路層級的值，請輸入 PREMIUM 或 STANDARD"
+  }  
 }
