@@ -1,7 +1,7 @@
 #! /bin/bash
 source ./common.sh
 
-gcloud compute instances list --project ${project_id} --filter="(NOT name ~ ^gke- AND NOT name ~ ^runner-) AND status:RUNNING" --format="table(NAME,ZONE,INTERNAL_IP,EXTERNAL_IP)"
+gcloud compute instances list --project ${project_id} --filter="(NOT name ~ ^gke- AND NOT name ~ ^runner- AND NOT name ~ mig AND NOT name ~ template) AND status:RUNNING" --format="table(NAME,ZONE,INTERNAL_IP,EXTERNAL_IP)" --sort-by="NAME"
 
 echo -e "\n"
 
@@ -17,7 +17,7 @@ N | n)
     ;;
 esac
 
-gce_output=$(gcloud compute instances list --project ${project_id} --filter="(NOT name ~ ^gke- AND NOT name ~ ^runner-) AND status:RUNNING" --format="value(NAME,ZONE,INTERNAL_IP,EXTERNAL_IP)")
+gce_output=$(gcloud compute instances list --project ${project_id} --filter="(NOT name ~ ^gke- AND NOT name ~ ^runner- AND NOT name ~ mig AND NOT name ~ template) AND status:RUNNING" --format="value(NAME,ZONE,INTERNAL_IP,EXTERNAL_IP)" --sort-by="NAME")
 IFS=$'\n' read -rd '' -a gce_array <<<"$gce_output"
 
 for gce_data in "${gce_array[@]}"; do

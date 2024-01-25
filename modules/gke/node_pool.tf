@@ -15,6 +15,12 @@ resource "google_container_node_pool" "pools" {
     google_container_cluster.primary.min_master_version,
   )
 
+  initial_node_count = lookup(each.value, "autoscaling", true) ? lookup(
+    each.value,
+    "total_min_count",
+    lookup(each.value, "min_count", 1)
+  ) : null
+
   // node 的數量，如果是 autoscaling 就不用設定，如果想固定數量就要設定 node_count
   node_count = lookup(each.value, "autoscaling", true) ? null : lookup(each.value, "node_count", 1)
 
@@ -119,6 +125,12 @@ resource "google_container_node_pool" "pools" {
 
   // 每個節點的最大pod數量
   max_pods_per_node = lookup(each.value, "max_pods_per_node", 64)
+
+  lifecycle {
+    ignore_changes = [
+      initial_node_count
+    ]
+  }
 
   timeouts {
     create = lookup(var.timeouts, "create", "60m")

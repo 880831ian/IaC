@@ -32,7 +32,7 @@ variable "enable_display" {
 
 variable "boot_disk_auto_delete" {
   type        = bool
-  description = "是否刪除 instance 時，自動刪除開機磁碟，預設為開啟 (選填)"
+  description = "是否自動刪除開機磁碟，預設為開啟 (選填)"
   default     = true
 }
 
@@ -76,7 +76,7 @@ variable "boot_disk_mode" {
 
 variable "attached_disk_enabled" {
   type        = bool
-  description = "是否啟用附加磁碟"
+  description = "是否啟用附加磁碟，預設為關閉 (選填)"
   default     = false
 }
 
@@ -118,16 +118,16 @@ variable "nat_ip_enabled" {
   default     = false
 }
 
-variable "network_tags" {
-  type        = list(string)
-  description = "GCE 網路標記，預設為空 (選填)"
-  default     = []
-}
-
 variable "labels" {
   type        = map(string)
   description = "GCE 標籤，預設為空 (選填)"
   default     = {}
+}
+
+variable "network_tags" {
+  type        = list(string)
+  description = "GCE 網路標記，預設為空 (選填)"
+  default     = []
 }
 
 variable "metadata" {
@@ -156,7 +156,7 @@ variable "service_account_email" {
 
 variable "service_account_scopes" {
   type        = list(string)
-  description = "GCE 服務帳戶範圍，預設為空 (選填)"
+  description = "GCE 服務帳戶範圍，預設請參考 variables.tf (選填)"
   default = [
     "https://www.googleapis.com/auth/devstorage.read_only",
     "https://www.googleapis.com/auth/logging.write",
@@ -182,46 +182,46 @@ variable "allow_stopping_for_update" {
 # ====================
 variable "internal_ip_address_name" {
   type        = string
-  description = "IP 內網名稱"
+  description = "內網 IP 名稱，預設為 [GCE Name]-internal (選填)"
   default     = ""
 }
 
 variable "internal_ip_address_description" {
   type        = string
-  description = "IP 內網描述"
+  description = "內網 IP 描述，預設為空 (選填)"
   default     = ""
 }
 
 variable "internal_ip_address" {
   type        = string
-  description = "IP 內網位址"
+  description = "內網 IP，預設為空 (選填)"
   default     = ""
 }
 
 variable "external_ip_address_name" {
   type        = string
-  description = "IP 外網名稱"
+  description = "外網 IP 名稱，需要設定，請先開啟 nat_ip_enabled，預設為 [GCE Name]-external (選填)"
   default     = ""
 }
 
 variable "external_ip_address_description" {
   type        = string
-  description = "IP 外網描述"
+  description = "外網 IP 描述，預設為空 (選填)"
   default     = ""
 }
 
 variable "external_ip_address" {
   type        = string
-  description = "IP 外網位址"
+  description = "外網 IP，預設為空 (選填)"
   default     = ""
 }
 
 variable "external_network_tier" {
   type        = string
-  description = "IP 外網網路層級"
+  description = "外網 IP 網路層級，預設為 PREMIUM (選填)"
   default     = "PREMIUM"
   validation {
     condition     = contains(["PREMIUM", "STANDARD"], var.external_network_tier)
     error_message = "不符合 IP 外網網路層級的值，請輸入 PREMIUM 或 STANDARD"
-  }  
+  }
 }

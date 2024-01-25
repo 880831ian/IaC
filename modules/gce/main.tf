@@ -61,6 +61,11 @@ resource "google_compute_instance" "instance" {
     ignore_changes = [metadata["ssh-keys"]]
   }
 
+  depends_on = [
+    google_compute_address.internal-address,
+    google_compute_address.external-address,
+  ]
+
   timeouts {}
 }
 

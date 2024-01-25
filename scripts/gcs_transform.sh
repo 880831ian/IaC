@@ -98,6 +98,8 @@ for gcs_data in "${gcs_array[@]}"; do
     # 移除與預設值相同的參數
     awk '!/default_setting/' terragrunt.hcl >temp_file && mv temp_file terragrunt.hcl
 
+    sed -i "" 's/:/=/g' terragrunt.hcl # 只有 macOS 會需要 -i ""，Linux 不需要
+
     echo "yes" | terragrunt plan
 
     rm -rf terraform.tfstate .terraform* .terragrunt-cache
