@@ -9,7 +9,7 @@ include {
 // 以下設定為範例，會列出適合本人使用的變數，請依照需求自行調整，沒有使用請刪除欄位以及空白行，維持程式整潔，後面會標示是否為必填，詳細參數說明可以參考 modules/gke/variables.tf 檔案
 inputs = {
   name = "test" // Bucket 所在的專案 ID (必填)
-  labels = {            // Bucket 標籤，預設為空 (選填)
+  labels = {    // Bucket 標籤，預設為空 (選填)
     "env" = "test"
   }
   location = "ASIA"           // Bucket 所在地點，可以選 Multi-region、Dual-region、Region，如果選擇 Dual-region 需填寫 custom_placement_config (必填)

@@ -5,13 +5,17 @@
 ```
 .
 ├── common.sh
-├── filestoe_transform.sh
 ├── filestore-template
+├── filestore_transform.sh
+├── gce-group-template
+├── gce-group_transform.sh
 ├── gce-template
 ├── gce_transform.sh
 ├── gcs-template
 ├── gcs_transform.sh
 ├── gke_import.sh
+├── ip-template
+├── ip_transform.sh
 ├── memorystore-template
 └── memorystore_transform.sh
 ```
@@ -29,3 +33,7 @@
 `memorystore_transform.sh` : 此為 memorystore 自動轉換腳本，可以選擇專案，會自動將該專案底下的 memorystore 套用到 `memorystore-template`，並產生對應的 terragrunt.hcl 檔案
 
 `gcs_transform.sh` : 此為 gcs 自動轉換腳本，可以選擇專案，會自動將該專案底下的 gcs 套用到 `gcs-template`，並產生對應的 terragrunt.hcl 檔案
+
+`ip_transform.sh` : 此為 ip 自動轉換腳本，可以選擇專案，會自動將該專案底下的 ip 套用到 `ip-template`，並產生對應的 terragrunt.hcl 檔案
+
+`gce-group_transform.sh` : 此為 gce-group 自動轉換腳本，可以選擇專案，會自動將該專案底下的 gce-group 套用到 `gce-group-template`，並產生對應的 terragrunt.hcl 檔案

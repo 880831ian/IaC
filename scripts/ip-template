@@ -1,0 +1,18 @@
+terraform {
+  source = "${get_path_to_repo_root()}/modules/ip"
+}
+
+include {
+  path = find_in_parent_folders()
+}
+
+inputs = {
+  name = "${name}"
+  description = "${description}"
+  region = "${region}"
+  address_type = "${address_type}"
+  ip_address = "${ip_address}"
+  subnetwork = "${subnetwork}"
+  network_tier = "${network_tier}"
+  labels = ${labels}
+}

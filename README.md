@@ -27,6 +27,7 @@
 - [IaC 架構](https://github.com/880831ian/IaC/blob/master/docs/iac-framework.md)
 - [IaC CICD 架構](https://github.com/880831ian/IaC/blob/master/docs/iac-cicd-framework.md)
 - [IaC 匯入、轉換腳本介紹](https://github.com/880831ian/IaC/blob/master/docs/iac-import-conversion-scripts.md)
+- [IaC 遇到的問題與解決辦法](https://github.com/880831ian/IaC/blob/master/docs/iac-fqa.md)
 - [IaC 備注](https://github.com/880831ian/IaC/blob/master/docs/iac-remark.md)
 
 <br>
@@ -142,3 +143,7 @@ inputs = {
 10. 上版控跑 CICD 前，可以先把專案 Clone 到本地跑，由於在執行 plan 以及 apply 時，會鎖檔，如果出現以下圖片錯誤，就代表正在有人測試相同資源，可以稍等一下再試試看：
 
 ![img](images/yZXCPoY.png)
+
+<br>
+
+11. 目前要刪除資源，請先參考 [IaC 備注](https://github.com/880831ian/IaC/blob/master/docs/iac-remark.md) 第二點、第三點。
