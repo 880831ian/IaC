@@ -1,0 +1,42 @@
+terraform {
+  source = "${get_path_to_repo_root()}/modules/lb-internal"
+}
+
+include {
+  path = find_in_parent_folders()
+}
+
+inputs = {
+  name = "${backend_name}"
+  zone = "${zone}"
+  protocol = "${protocol}"
+  network = "${network}"
+
+  backends = [
+    ${backends}
+  ]
+  logging = ${logging}
+  connection_draining_timeout_sec = ${connection_draining_timeout_sec}
+
+  health_check = {
+    name                = "${health_check_name}"
+    region              = ${health_check_region}
+    description         = "${health_check_description}"
+    type                = "${health_check_protocol}"
+    port                = ${health_check_port}
+    proxy_header        = "${health_check_proxy_header}"
+    request             = "${health_check_request_path}"
+    response            = "${health_check_response}"
+    request_path        = "${health_check_request_path}"
+    host                = "${http_host}"
+    enable_log          = ${health_check_logging}
+    check_interval_sec  = ${check_interval_sec}
+    timeout_sec         = ${timeout_sec}
+    healthy_threshold   = ${healthy_threshold}
+    unhealthy_threshold = ${unhealthy_threshold}
+  }
+
+  forwarding_rules = {  
+    ${forwarding_rules}
+  }
+}

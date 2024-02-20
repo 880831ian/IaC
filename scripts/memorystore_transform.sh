@@ -1,12 +1,22 @@
 #! /bin/bash
 source ./common.sh
 
-gcloud redis instances list --region ${region} --project ${project_id} --format="table(INSTANCE_NAME,REGION)"
+output=$(gcloud redis instances list --region ${region} --project ${project_id} --format="table(INSTANCE_NAME,REGION)" --sort-by="INSTANCE_NAME")
+
+if [ -z "$output" ]; then
+    echo -e "${RED}該專案無此資源 (Memorystore) ，請重新選擇專案${WHITE}\n"
+    exit
+else
+    echo "$output"
+fi
+
 echo -e "\n"
 
 read -r -e -p "以上為本次要匯入的 Memorystore Redis Instances 線上資源，請確認是否繼續進行？(Y/N)：" continue
 case $continue in
-Y | y) ;;
+Y | y)
+    echo -e "\n${GREEN}開始轉換 Memorystore Redis Instances 線上資源 ... (請稍等) ◟(ꉺᴗꉺ๑)◝ ... ${WHITE}\n"
+    ;;
 N | n)
     exit
     ;;
@@ -16,22 +26,39 @@ N | n)
     ;;
 esac
 
-redis_output=$(gcloud redis instances list --region ${region} --project ${project_id} --format="value(INSTANCE_NAME,REGION)")
+redis_output=$(gcloud redis instances list --region ${region} --project ${project_id} --format="csv(INSTANCE_NAME,REGION)" --sort-by="INSTANCE_NAME")
+redis_output=$(echo "$redis_output" | sed '1d') # 移除標題列
 IFS=$'\n' read -rd '' -a redis_array <<<"$redis_output"
 
-for redis_data in "${redis_array[@]}"; do
-    export name=$(echo $redis_data | cut -d " " -f 1)
-    export region=$(echo $redis_data | cut -d " " -f 2)
+function process_memorystore() {
+    local redis_data=$1
+    local project_id=$2
+    local project_name=$3
+
+    export name=$(echo $redis_data | cut -d "," -f 1)
+    export region=$(echo $redis_data | cut -d "," -f 2)
+
+    echo -e "\n\033[1;32m====================================================================================================\033[0m"
+    echo -e "\n\033[1;34m匯入 Memorystore Redis Instances 線上資源：\033[1;32m${name}\033[0m\n"
 
     mkdir -p ../projects/${project_name}/memorystore-${name}
     cd ../projects/${project_name}/memorystore-${name}
 
     echo "resource \"google_redis_instance\" \"instance\" {}" >main.tf
 
-    terraform init 1>/dev/null
-    terraform import google_redis_instance.instance ${project_id}/${region}/${name} 1>/dev/null
+    until
+        export TF_PLUGIN_TIMEOUT=4h
+        terraform init 1>/dev/null
+    do
+        echo -e "\n\033[1;33mterraform init 失敗，Delay 3 秒後重試 ....\033[0m"
+        sleep 3
+    done
 
-    echo -e "\n${BLUE}匯入 Memorystore Redis Instances 線上資源：${GREEN}${name}${WHITE}"
+    until terraform import google_redis_instance.instance ${project_id}/${region}/${name} 1>/dev/null; do
+        echo -e "\n\033[1;33mterraform import google_redis_instance.instance 失敗，Delay 3 秒後重試 ....\033[0m"
+        sleep 3
+    done
+
     export display_name=$(cat terraform.tfstate | jq -r '.resources[].instances[].attributes.display_name')
     if [ "$display_name" == "" ]; then # 與預設值相同，則不顯示
         export display_name="default_setting"
@@ -96,11 +123,18 @@ for redis_data in "${redis_array[@]}"; do
     # 移除與預設值相同的參數
     awk '!/default_setting/' terragrunt.hcl >temp_file && mv temp_file terragrunt.hcl
 
-    echo "yes" | terragrunt plan
+    until echo "yes" | terragrunt plan; do
+        echo -e "\n\033[1;33mterragrunt plan 失敗，Delay 3 秒後重試 ....\033[0m"
+        sleep 3
+    done
 
     rm -rf terraform.tfstate .terraform* .terragrunt-cache
 
     terragrunt hclfmt
 
     cd ../../../scripts
-done
+}
+
+export -f process_memorystore
+redis_params=$(printf "%s\n" "${redis_array[@]}")
+echo "$redis_params" | parallel --no-notice --jobs ${JOB_COUNT} process_memorystore {} ${project_id} ${project_name}

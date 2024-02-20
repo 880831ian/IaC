@@ -8,14 +8,14 @@
 
 1. 此專案的 IaC Module 有參考官方的 Module 改寫，有將一些自己不常用到的設定給拔掉，所以不是所有設定都在上面，如果有需要的話，可以自行參考官方的 Module 來改寫。
 2. 要使用此專案，請先確定版本是否符合 Module 所規定的版本，如果版本不符合，請自行升級。
-3. 請先檢查所有腳本或是設定，將以下參數 `[專案名稱]`、`[專案ID]`、`[專案地區]`都改成自己的設定，才能正常使用。
+3. 請先檢查所有腳本或是設定，將以下參數 `<專案名稱>`、`<專案ID>`、`<專案地區>`都改成自己的設定，才能正常使用。
 4. 其餘沒有調整或寫出的內容，歡迎開 PR 來補充，謝謝。
 
 <br>
 
 # 使用版本
 
-- Terraform : v1.5.7
+- Terraform : v1.7.1
 - Terragrunt : 0.53.4
 - GitLab : 16.3
 
@@ -42,11 +42,21 @@
 
 <br>
 
-(以下都會用 `[專案名稱]`、`[資源]` 來代替實際的專案名稱、資源，請大家自行替換)
+首先，由於我們儲存 tfstate 檔案的位置在 GCS，如果在本地跑，不使用 CICD，需要先登入 application-default 才可以正常的訪問到 GCS
 
-首先，假設我們要調整 `[專案名稱]` 專案的 gke 資源，那你需要完成以下的幾個步驟：
+```
+gcloud auth application-default login
+```
 
-1. 先進入 projects 資料夾，再進到 `[專案名稱]` 專案資料夾，如下：
+https://cloud.google.com/sdk/gcloud/reference/auth/application-default/login
+
+<br>
+
+(以下都會用 `<專案名稱>`、`<資源類型>`、`<資源名稱>` 來代替實際的專案名稱、資源類型、資源名稱，請大家自行替換)
+
+假設我們要調整 `<專案名稱>` 專案的 gke 資源，那你需要完成以下的幾個步驟：
+
+1. 先進入 projects 資料夾，再進到 `<專案名稱>` 專案資料夾，如下：
 
 ```
 .
@@ -60,7 +70,7 @@
 
 <br>
 
-2. 在 `[專案名稱]` 專案底下會先看到一個 terragrunt.hcl 檔案，該檔案會將 iac 管理的 tfstate.tf backend 的設定寫在這，詳細可以參考 [Terraform 如何多人共同開發 (將 tfstate 存在後端)](https://blog.pin-yi.me/terraform-tfstate/)，以及一些共用變數，`project_id`、`network_project_id`，這種整個專案都可以使用的變數就可以放在這邊。
+2. 在 `<專案名稱>` 專案底下會先看到一個 terragrunt.hcl 檔案，該檔案會將 iac 管理的 tfstate.tf backend 的設定寫在這，詳細可以參考 [Terraform 如何多人共同開發 (將 tfstate 存在後端)](https://blog.pin-yi.me/terraform-tfstate/)，以及一些共用變數，`project_id`、`network_project_id`，這種整個專案都可以使用的變數就可以放在這邊。
 
 <br>
 

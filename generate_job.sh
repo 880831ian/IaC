@@ -1,5 +1,7 @@
 #!/bin/bash
 
+generate_status=${2}
+
 echo "stages:
  - plan
  - apply
@@ -7,6 +9,8 @@ echo "stages:
 default:
   image:
     name: alpine/terragrunt
+  tags:
+    - terraform-runner
 
 before_script:
   - export GOOGLE_APPLICATION_CREDENTIALS=${ACCOUNT_KEY}
@@ -15,23 +19,19 @@ before_script:
 generate_plan_job() {
   PROJECT_URL="$1"
   PARENT_PIPELINE_ID="$2"
-  JOB_NAME="$3"
   echo "plan:${PROJECT_URL}:
   stage: plan  
-  tags:
-    - standard
   script:
     - cd projects/${PROJECT_URL}
     - terragrunt validate
     - terragrunt refresh
     - terragrunt plan -out=tfplan
-  needs:
-    - pipeline: \"${PARENT_PIPELINE_ID}\"
-      job: ${JOB_NAME}      
   artifacts:
     paths:
       - projects/${PROJECT_URL}
     expire_in: \"3600\"
+  rules:
+    - if: '\$CI_PIPELINE_SOURCE == \"parent_pipeline\"'
   " >>job.yml
 }
 
@@ -40,8 +40,6 @@ generate_apply_job() {
   PARENT_PIPELINE_ID="$2"
   echo "apply:${PROJECT_URL}:
   stage: apply
-  tags:
-    - standard
   script:
     - cd projects/${PROJECT_URL}
     - echo 'y' | terragrunt apply tfplan
@@ -53,6 +51,10 @@ generate_apply_job() {
 
 IFS=',' read -ra PROJECT_URLS <<<"$1"
 for PROJECT_URL in "${PROJECT_URLS[@]}"; do
-  generate_plan_job "$PROJECT_URL" "$PARENT_PIPELINE_ID" "$2"
-  generate_apply_job "$PROJECT_URL" "$PARENT_PIPELINE_ID"
+  if [ "${generate_status}" == "plan" ]; then
+    generate_plan_job "$PROJECT_URL" "$PARENT_PIPELINE_ID"
+  else
+    generate_plan_job "$PROJECT_URL" "$PARENT_PIPELINE_ID"
+    generate_apply_job "$PROJECT_URL" "$PARENT_PIPELINE_ID"
+  fi
 done

@@ -14,93 +14,101 @@
 │   └── iac-remark.md
 ├── generate_job.sh
 ├── modules
-│   ├── filestore
-│   │   ├── locals.tf
-│   │   ├── main.tf
-│   │   ├── outputs.tf
-│   │   ├── variables.tf
-│   │   └── versions.tf
-│   ├── gce
-│   │   ├── locals.tf
-│   │   ├── main.tf
-│   │   ├── outputs.tf
-│   │   ├── variables.tf
-│   │   └── versions.tf
-│   ├── gce-group
-│   │   ├── locals.tf
-│   │   ├── main.tf
-│   │   ├── variables.tf
-│   │   └── versions.tf
-│   ├── gcs
-│   │   ├── main.tf
-│   │   ├── outputs.tf
-│   │   ├── variables.tf
-│   │   └── versions.tf
-│   ├── gke
-│   │   ├── cluster.tf
-│   │   ├── main.tf
-│   │   ├── node_pool.tf
-│   │   ├── outputs.tf
-│   │   ├── variables.tf
-│   │   ├── variables_defaults.tf
-│   │   └── versions.tf
-│   ├── ip
-│   │   ├── locals.tf
-│   │   ├── main.tf
-│   │   ├── outputs.tf
-│   │   └── variables.tf
-│   └── memorystore
-│       ├── locals.tf
-│       ├── main.tf
-│       ├── outputs.tf
-│       ├── variables.tf
-│       └── versions.tf
+│   ├── cloud-armor
+│   │   ├── local.tf
+│   │   ├── main.tf
+│   │   ├── variables.tf
+│   │   └── versions.tf
+│   ├── filestore
+│   │   ├── locals.tf
+│   │   ├── main.tf
+│   │   ├── outputs.tf
+│   │   ├── variables.tf
+│   │   └── versions.tf
+│   ├── gce
+│   │   ├── locals.tf
+│   │   ├── main.tf
+│   │   ├── outputs.tf
+│   │   ├── variables.tf
+│   │   └── versions.tf
+│   ├── gce-group
+│   │   ├── locals.tf
+│   │   ├── main.tf
+│   │   ├── variables.tf
+│   │   └── versions.tf
+│   ├── gcs
+│   │   ├── main.tf
+│   │   ├── outputs.tf
+│   │   ├── variables.tf
+│   │   └── versions.tf
+│   ├── gke
+│   │   ├── cluster.tf
+│   │   ├── main.tf
+│   │   ├── node_pool.tf
+│   │   ├── outputs.tf
+│   │   ├── variables.tf
+│   │   ├── variables_defaults.tf
+│   │   └── versions.tf
+│   ├── ip
+│   │   ├── locals.tf
+│   │   ├── main.tf
+│   │   ├── outputs.tf
+│   │   ├── variables.tf
+│   │   └── versions.tf
+│   ├── lb-internal
+│   │   ├── locals.tf
+│   │   ├── main.tf
+│   │   ├── outputs.tf
+│   │   ├── variables.tf
+│   │   └── versions.tf
+│   └── memorystore
+│       ├── locals.tf
+│       ├── main.tf
+│       ├── outputs.tf
+│       ├── variables.tf
+│       └── versions.tf
 ├── projects
-│   ├── [專案名稱]
-│   │   ├── filestore-XXX
-│   │   ├── gce-XXX
-│   │   ├── gce-group-XXX
-│   │   ├── gcs-XXX
-│   │   ├── gke-XXX
-│   │   ├── memorystore-XXX
-│   │   ├── ip-XXX
-│   │   └── terragrunt.hcl
-│   └── [專案名稱]
-│       ├── gce-XXX
-│       ├── gce-group-XXX
-│       ├── gcs-XXX
-│       ├── gke-XXX
-│       ├── memorystore-XXX
-│       ├── ip-XXX
-│       └── terragrunt.hcl
+│   └── [專案名稱]
+│       ├── cloudarmor-XXX
+│       ├── filestore-XXX
+│       ├── gce-XXX
+│       ├── gce-group-XXX
+│       ├── gcs-XXX
+│       ├── gke-XXX
+│       ├── memorystore-XXX
+│       ├── ip-XXX
+│       ├── lb-internal-XXX
+│       └── terragrunt.hcl
 ├── scripts
-│   ├── common.sh
-│   ├── filestoe_transform.sh
-│   ├── filestore-template
-│   ├── gce-group-template
-│   ├── gce-group_transform.sh
-│   ├── gce-template
-│   ├── gce_transform.sh
-│   ├── gcs-template
-│   ├── gcs_transform.sh
-│   ├── gke_import.sh
-│   ├── ip-template
-│   ├── ip_transform.sh
-│   ├── memorystore-template
-│   └── memorystore_transform.sh
+│   ├── common.sh
+│   ├── filestore-template
+│   ├── filestore_transform.sh
+│   ├── gce-group-template
+│   ├── gce-group_transform.sh
+│   ├── gce-template
+│   ├── gce_transform.sh
+│   ├── gcs-template
+│   ├── gcs_transform.sh
+│   ├── gke_import.sh
+│   ├── ip-template
+│   ├── ip_transform.sh
+│   ├── lb-internal-template
+│   ├── lb-internal_transform.sh
+│   ├── memorystore-template
+│   └── memorystore_transform.sh
 └── template
     ├── filestore
-    │   └── terragrunt.hcl
+    │   └── terragrunt.hcl
     ├── gce
-    │   └── terragrunt.hcl
+    │   └── terragrunt.hcl
     ├── gce-group
-    │   └── terragrunt.hcl
+    │   └── terragrunt.hcl
     ├── gcs
-    │   └── terragrunt.hcl
+    │   └── terragrunt.hcl
     ├── gke
-    │   └── terragrunt.hcl
+    │   └── terragrunt.hcl
     ├── memorystore
-    │   └── terragrunt.hcl
+    │   └── terragrunt.hcl
     └── terragrunt.hcl
 ```
 
